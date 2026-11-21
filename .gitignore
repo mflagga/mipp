@@ -1,0 +1,28 @@
+# Biała lista: domyślnie ignorujemy wszystko (pliki pomocnicze LaTeX-a, .build/,
+# __pycache__, lokalne PDF-y źródłowe), a niżej odblokowujemy to, co ma być w repo.
+# NOWY PLIK, KTÓRY MA TRAFIĆ DO REPO, TRZEBA DOPISAĆ TUTAJ (inaczej `git add` go pominie).
+*
+!*/
+
+# repo
+!.gitignore
+!README.md
+!WSPOLPRACA.md
+!TODO.md
+
+# źródło prezentacji i budowanie
+!main.tex
+!makefile
+
+# gotowy PDF (wynik `make`)
+!prezentacja.pdf
+
+# rysunki: własne wykresy (fig/*.pdf) i rysunki z literatury (fig/ref/)
+!fig/**
+
+# symulacje
+!sim/*.py
+!requirements.txt
+
+# plan prezentacji (PDF artykułu bazowego celowo NIE jest w repo — patrz README)
+!src/initial_plan.txt

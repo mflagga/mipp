@@ -1,0 +1,63 @@
+KONTEKST
+Przedmiot: „Materiały i przyrządy półprzewodnikowe”. Prezentacja po polsku:
+„Fermiony Majorany i ich realizacja w nanodrutach półprzewodnikowych”.
+Poziom inżynierski: wchodzimy w technikalia (wzory, parametry materiałowe, liczby).
+Czas: 55 min treści + 5 min pytań, ok. 42 slajdy. Dwóch prelegentów.
+Materiał bazowy (załączony PDF): Leijnse & Flensberg, „Introduction to topological
+superconductivity and Majorana fermions”, Semicond. Sci. Technol. 2012, arXiv:1206.1736.
+Pokrywa teorię (Kitaev → nanodrut) do 2012. Część eksperymentalną i stan na 2026 trzeba
+uzupełnić nowszą literaturą. Rysunki 1, 3, 4, 5 z PDF nadają się na slajdy (z podaniem źródła).
+
+PODZIAŁ
+Osoba A (~28 min, slajdy 1–22): od idei do warunku topologicznego
+Osoba B (~27 min, slajdy 23–42): od parametrów materiałowych do eksperymentu i stanu na 2026
+
+STRUKTURA
+1. Motywacja (4 min, sl. 1–3): dekoherencja; bit zapisany w dwóch rozdzielonych „połówkach”
+   fermionu; oś czasu 1937 → Kitaev 2001 → nanodruty 2010 → Delft 2012 → retrakcja 2021 → Microsoft 2025–26.
+2. Majorana w ciele stałym (6 min, sl. 4–8): γ=γ†, γ²=1, {γi,γj}=2δij, c=(γ1+iγ2)/2;
+   kwazicząstka Bogoliubowa; s-wave vs potrzeba „bezspinowego” p-wave; symetria cząstka–dziura
+   → Majorana w E=0; argument Kramersa → trzeba złamać TRS (stąd pole B). Równ. 2–5, 43–50.
+3. Łańcuch Kitaeva (8 min, sl. 9–14): Hamiltonian (równ. 1); punkt μ=0, t=Δ (równ. 6–9);
+   nielokalny fermion, zdegenerowany stan podstawowy (parzystość); faza topologiczna |μ|<2t;
+   E(k)=±√((2t cos k+μ)²+4Δ²sin²k); δE ∝ e^(−L/ξ) → wymóg L≫ξ. Własna symulacja: widmo BdG
+   łańcucha N≈30 w funkcji μ i |ψ|² modów zerowych (numpy).
+4. Parzystość, nieabelowość, kubit (5 min, sl. 15–18): P=−iγ1γ2; 4 Majorany = 1 kubit (tetron);
+   braiding U=exp(π/4 γiγj); co chronione, a co nie (zatruwanie kwazicząstkami, δE);
+   tylko bramki Clifforda; obliczenia oparte na pomiarach parzystości.
+5a. Nanodrut, model (sl. 19–22, osoba A): InAs/InSb + Al + B wzdłuż drutu + bramki (rys. 4);
+   H = ħ²k²/2m* − μ + αkσy + V_Zσz, potem BdG z Δ (równ. 51); E±(k) (równ. 52, rys. 5a–d);
+   warunek topologiczny V_Z > √(Δ²+μ²) (równ. 53) + wykres E(B) z zamknięciem przerwy.
+5b. Nanodrut, inżynieria (sl. 23–25, osoba B): efektywne Δ_p ≈ (α/V_Z)Δ (równ. 54) i kompromisy;
+   skale energii: V_Z=½gμ_B·B, μ_B=57,9 μeV/T; InSb (g≈40–50, m*≈0,014 m0) → B*≈0,15 T;
+   InAs (g≈10–15, m*≈0,023 m0) → B*≈0,5–0,7 T (przy Δ≈0,2 meV); k_B·20 mK≈1,7 μeV;
+   ξ ~ setki nm → drut 1–3 μm (wartości orientacyjne, zweryfikować). Komplikacje: wiele
+   podpasm, efekty orbitalne, „metalizacja”, nieporządek, elektrostatyka bramek.
+6. Materiały i technologia (7 min, sl. 26–30): tabela półprzewodników i nadprzewodników
+   (Al, NbTiN, Pb, Sn); wzrost VLS (MBE/MOVPE), epitaksjalna powłoka Al in situ, cieniowanie;
+   twarda vs miękka przerwa (Krogstrup 2015, Chang 2015); SAG i 2DEG InAs/Al (Microsoft);
+   układ pomiarowy (HfO2, kriostat 10–20 mK, magnes wektorowy, lock-in, reflektometria RF).
+7. Pomiary i pułapki (8 min, sl. 31–36): spektroskopia tunelowa i ZBP; Mourik 2012;
+   kwantyzacja 2e²/h i retrakcja Zhang 2018 (wycofana 2021); podróbki: ABS, quasi-Majorany,
+   Kondo; lepsze testy: przewodnictwo nielokalne, TGP (PRB 2023), wyspy Coulombowskie 2e→1e
+   (Albrecht 2016), efekt Josephsona 4π; odczyt parzystości przez pojemność kwantową
+   (Microsoft, Nature 2025: błąd przypisania 1%, pole ~2 T).
+8. Stan na 2026 (5 min, sl. 37–40): łańcuchy Kitaeva z kropek w InSb (Dvir, Nature 2023,
+   „Poor Man's Majoranas”, bez ochrony topologicznej; łańcuch 3-węzłowy, Nat. Nano 2025);
+   tetron Microsoftu (τ_X=14,5 μs, τ_Z=12,4 ms; błędy 16% / 0,5%; arXiv 2507.08795);
+   kontrowersje: Legg 2025 krytykuje TGP, PRB 17.11.2026 o fałszywych pozytywach w odczycie C_Q;
+   Majorana 2 (czerwiec 2026): Pb zamiast Al, deklarowany średni czas życia 20 s (sprawdzić,
+   co dokładnie oznacza ten „czas życia”); alternatywy: PbTe–Pb, druty z pełną powłoką.
+9. Podsumowanie i literatura (2 min, sl. 41–42): trzy wnioski + otwarte pytanie
+   (brak jednoznacznej demonstracji braidingu i fuzji).
+Slajdy zapasowe: BdG/Nambu (równ. 36–42), argument Kramersa, kod symulacji, tabela parametrów.
+
+DO WYGENEROWANIA
+Trzy własne wykresy: (1) widmo łańcucha Kitaeva w funkcji μ, (2) pasma drutu dla rosnącego B
+(odtworzenie rys. 5), (3) E(B) z zamknięciem przerwy przy V_Z=√(Δ²+μ²).
+
+LITERATURA
+Kitaev, Phys.-Usp. 2001; Lutchyn–Sau–Das Sarma, PRL 2010; Oreg–Refael–von Oppen, PRL 2010;
+Lutchyn i in., Nat. Rev. Mater. 2018; Prada i in., Nat. Rev. Phys. 2020; Mourik i in.,
+Science 2012; Krogstrup i in., Nat. Mater. 2015; Chang i in., Nat. Nanotechnol. 2015;
+Albrecht i in., Nature 2016; Microsoft Quantum, PRB 2023 (TGP) i Nature 2025; Dvir i in., Nature 2023.
