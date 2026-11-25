@@ -1,0 +1,50 @@
+cząstki i antycząstki
+formalizm drugiej kwantyzacji
+istnienie fermionów majorany z matematyki
+realizacja w układach fizycznych
+komputery kwantowe
+
+-- formalizm drugiej kwantyzacji (raczej speedrunowany niżeli faktycznie tłumaczone jak na kursie)
+    właściwości prawdziwych materiałów i układów materii skondensowanej wynikają z kolektywnego oddziaływania elektronów
+    podmienianie cząstek - podział na bozony i fermiony - fermiony tylko jeden na dany stan - bozony dowolnie
+        dlaczego zamiana cząstek musi akurat skutować przesunięciem w fazie???
+        skad wynika zakaz Pauliego akurat dla fermionów
+    próba poradzenia sobie z układami n-czątskowymi - pierwsza kwantyzacja - wyznaczniki slatera
+    problemy z tym formalizmem - kosztowne obliczenia - z góry ustalone N 
+    układy n-cząskowe wymagają rewolucji w formalizmie
+    przejscie na drugą kwantyzacje
+    dla pojedynczego fermionu zero lub jeden - stany kubitowe
+    lokalna przestrzen hilberta jedynie 2-wymiarowa
+    ortonormalność (i zupełność)
+    operatory kreacji i anihilacji, ich zasady działania i postać ketbra (operatory są zupełne i ich span jest całą przestrzenią)
+        dlaczego (w nawiasie)
+    operatory nie są hermitowskie więc nie możemy skonstruować hamiltonianu z ich samych a jedynie mogą występować parami
+    para c^{dagger}c jako własny operator - jego wartości własne w zbiorze {0,1} nadają szczególną wartość wcześniejszemu "arbitrarnmu" oznaczeniu stanów jako zero i jeden
+    \hat{n} jako number operator - hermitowskość
+        number operator po polsku (chyba operator liczby obsadzeń)
+    wszystkie relacje komutacji i antykomutacji
+    MOZE JAKIS PRZYKLAD ZASTOSOWANIA
+    zalety takiego formalizmu - kompaktowy sposób na przedstawienie układów n-czatkowych - wszystkie wlasciwosci operatorow wyrazone w zaleznosciach (anty)komutatorów - obliczenia dużo łatwiejsze
+
+-- fermiony majorany 
+    w fizyce ciała stałego operatory kreacji i anihilacji dotyczą elektronów i dziur
+    idea fermionu majorany - pół zwykłego fermionu
+    operatory majorany  
+
+    lancuch kiteava
+    
+
+
+
+
+
+BIBLIOGRAFIA:
+artykuł
+https://youtu.be/6RhjrdnDUNI
+https://youtu.be/kh1u9Q5D47w
+https://youtu.be/RQWpF2Gb-gU
+https://claude.ai/
+
+
+
+
