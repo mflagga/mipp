@@ -23,13 +23,17 @@ komputery kwantowe
     \hat{n} jako number operator - hermitowskość
         number operator po polsku (chyba operator liczby obsadzeń)
     wszystkie relacje komutacji i antykomutacji
-    MOZE JAKIS PRZYKLAD ZASTOSOWANIA
     zalety takiego formalizmu - kompaktowy sposób na przedstawienie układów n-czatkowych - wszystkie wlasciwosci operatorow wyrazone w zaleznosciach (anty)komutatorów - obliczenia dużo łatwiejsze
 
 -- fermiony majorany 
     w fizyce ciała stałego operatory kreacji i anihilacji dotyczą elektronów i dziur
     idea fermionu majorany - pół zwykłego fermionu
-    operatory majorany  
+    operatory majorany jako rozdzielenie operatorów kreacji i anihilacji
+    operatory majorany jako superpozycja fermionu i jego antycząstki
+    operatory hermitowskie - fermiony majorany są własnymi antycząstkami - dlatego nie są fermionami - coś niezwykłego dla układów fermionowych
+    z postaci operatorów majorany możemy powiedzieć, że są superpozycją elektronu i dziury
+    gdzie szukac takich czastek? - w polprzewodnikach ciezko bo rozróżniamy elektron i dziurę i nie możemy ich mieszać ze sobą ze względu na ładunek
+    okazuje się, że BCS theory w nadprzewodnikach przewiduje kwazicząstki bogoliubova które mają dokładnie postać superpozycji elektronu i dziury
 
     lancuch kiteava
     
