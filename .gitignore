@@ -12,10 +12,12 @@
 
 # źródło prezentacji i budowanie
 !main.tex
+!slajdy.tex
 !makefile
 
 # gotowy PDF (wynik `make`)
 !prezentacja.pdf
+!slajdy.pdf
 
 # rysunki: własne wykresy (fig/*.pdf) i rysunki z literatury (fig/ref/)
 !fig/**

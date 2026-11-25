@@ -1,0 +1,882 @@
+% =============================================================================
+%  Fermiony Majorany — od drugiej kwantyzacji do kubitu topologicznego
+%  Slajdy towarzyszące wystąpieniu, wg planu z plan.txt.
+%
+%  Zasada: slajd pokazuje wzór / rysunek / hasło, resztę mówię.
+%  Kompilacja: make slajdy   (latexmk -lualatex → slajdy.pdf)
+% =============================================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usetheme[progressbar=frametitle,numbering=fraction,sectionpage=none,block=fill]{metropolis}
+\usefonttheme{serif}
+\usefonttheme{professionalfonts}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{STIX Two Text}
+\setsansfont{STIX Two Text}
+\setmathfont{STIX Two Math}
+\setmonofont{JetBrains Mono}[Scale=MatchLowercase]
+\usepackage{braket}
+\usepackage[polish]{babel}
+\usepackage{luavlna}
+\singlechars{polish}{AaIiOoUuWwZz}
+\usepackage{microtype}
+\usepackage{newunicodechar}
+% STIX Two Text nie ma tych znaków — bierzemy je z fontu matematycznego
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+\newunicodechar{⇓}{\ensuremath{\Downarrow}}
+\newunicodechar{≈}{\ensuremath{\approx}}
+\usepackage{csquotes}
+\DeclareQuoteAlias[guillemets*]{polish}{polish}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\sisetup{per-mode=symbol, exponent-product=\times, output-decimal-marker={.}}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, decorations.pathmorphing, babel}
+
+\AtBeginDocument{\let\varpropto\propto}
+
+% --- kolory (te same co w main.tex i na wykresach z sim/wykresy.py) ----------
+\definecolor{mBlue}{HTML}{1F5FA8}
+\definecolor{mRed}{HTML}{C8323C}
+\definecolor{mGreen}{HTML}{2A8A4A}
+\definecolor{mDark}{HTML}{1E2A3A}
+\setbeamercolor{frametitle}{bg=mDark}
+\setbeamercolor{progress bar}{fg=mRed, bg=mDark!30}
+\setbeamercolor{alerted text}{fg=mRed}
+\setbeamercolor{block title}{bg=mBlue!15, fg=mDark}
+\setbeamercolor{block body}{bg=mBlue!5}
+\setbeamercolor{block title alerted}{bg=mRed!15, fg=mDark}
+\setbeamercolor{block body alerted}{bg=mRed!5}
+
+% --- makra --------------------------------------------------------------------
+\setbeamertemplate{frame footer}{Fermiony Majorany}
+% źródło rysunku/danych w prawym dolnym rogu slajdu
+\newcommand{\zrodlo}[1]{%
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=south east, font=\tiny, text=gray, align=right, text width=13cm]
+      at ([xshift=-3mm, yshift=6.5mm]current page.south east) {#1};
+  \end{tikzpicture}}
+% drobna uwaga na dole slajdu
+\newcommand{\uwaga}[1]{\par\vfill{\footnotesize\color{gray}#1\par}}
+\newcommand{\hc}{\mathrm{h.c.}}
+\newcommand{\tak}{\textcolor{mGreen}{$\checkmark$}}
+\newcommand{\nie}{\textcolor{mRed}{$\times$}}
+\newcommand{\cz}[1]{\textcolor{mRed}{#1}}   % czerwony (także w trybie mat.)
+
+% mapa wystąpienia: 5 etapów, #1 = numer bieżącego (0 = żaden)
+\newcommand{\mapa}[1]{%
+  \begin{tikzpicture}[
+      etap/.style={draw=mDark!35, rounded corners=3pt, align=center, font=\small,
+                   minimum height=1.3cm, text width=2.15cm, fill=white, text=mDark!55},
+      teraz/.style={draw=mRed, fill=mRed!7, text=mDark, line width=1.2pt},
+      wszystkie/.style={draw=mDark!50, text=mDark}]
+    \foreach \i/\t in {1/{Cząstki\\i~antycząstki}, 2/{Druga\\kwantyzacja},
+                       3/{Majorany\\z~matematyki}, 4/{Realizacja\\fizyczna},
+                       5/{Komputery\\kwantowe}} {
+      \ifnum#1=0\relax
+        \node[etap, wszystkie] (n\i) at (2.65*\i, 0) {\t};
+      \else\ifnum\i=#1\relax
+        \node[etap, teraz] (n\i) at (2.65*\i, 0) {\t};
+      \else
+        \node[etap] (n\i) at (2.65*\i, 0) {\t};
+      \fi\fi
+    }
+    \foreach \i [evaluate=\i as \j using int(\i+1)] in {1,...,4}
+      \draw[-{Stealth}, mDark!45, thick] (n\i) -- (n\j);
+  \end{tikzpicture}}
+
+% slajd otwierający część: \czesc{numer}{tytuł}
+\newcommand{\czesc}[2]{%
+  \section{#2}%
+  \begin{frame}[plain]
+    \centering\vfill
+    {\color{mRed}Część #1}\\[2mm]
+    {\color{mDark}\LARGE #2}\\[12mm]
+    \mapa{#1}
+    \vfill
+  \end{frame}}
+
+% =============================================================================
+\title{Fermiony Majorany}
+\subtitle{od drugiej kwantyzacji do kubitu topologicznego}
+\author{Maciej}   % TODO: imię i nazwisko
+\date{\today}     % TODO: data wystąpienia
+\institute{Materiały i przyrządy półprzewodnikowe}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}{Plan}
+  \centering\vfill
+  \scalebox{1.05}{\mapa{0}}
+  \vfill
+\end{frame}
+
+% =============================================================================
+\czesc{1}{Cząstki i antycząstki}
+% =============================================================================
+
+% plan: cząstki i antycząstki
+\begin{frame}{Antycząstki: Dirac (1928)}
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      \centering
+      {\Large $E = \pm\sqrt{p^2c^2 + m^2c^4}$}\\[8mm]
+      \raggedright
+      \begin{itemize}
+        \item rozwiązania z~$E<0$ — \alert{„morze Diraca”}
+        \item dziura w~morzu = \alert{antycząstka}
+        \item ta sama masa, przeciwny ładunek
+        \item pozyton $e^+$ — Anderson (1932)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.85]
+        \fill[mBlue!12] (0,1) rectangle (3.4,2.8);
+        \fill[mDark!28] (0,-1) rectangle (3.4,-2.8);
+        \draw[-{Stealth}] (0,-3) -- (0,3.2) node[above] {$E$};
+        \draw (-0.1,1) node[left] {$mc^2$} -- (0.1,1);
+        \draw (-0.1,-1) node[left] {$-mc^2$} -- (0.1,-1);
+        \node[font=\scriptsize, mBlue] at (1.3,2.45) {stany puste};
+        \node[font=\scriptsize, mDark] at (1.3,-2.45) {stany obsadzone};
+        \node[font=\scriptsize, gray] at (1.1,0) {przerwa $2mc^2$};
+        \draw[-{Stealth}, thick, mRed, decorate,
+              decoration={snake, amplitude=1pt, segment length=5pt, post length=4pt}]
+              (2.5,-1.45) -- (2.5,1.4);
+        \fill[mBlue] (2.5,1.6) circle (3.5pt) node[right=3pt] {$e^-$};
+        \draw[mRed, very thick, fill=white] (2.5,-1.65) circle (3.5pt) node[right=3pt] {$e^+$};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: cząstki i antycząstki → pytanie Majorany
+\begin{frame}{Czy cząstka może być własną antycząstką?}
+  \centering
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{llll}
+    \toprule
+    cząstka & antycząstka & & \\
+    \midrule
+    elektron $e^-$ & pozyton $e^+$ & różne & — \alert{ładunek} \\
+    foton & foton & ta sama & — ale to \emph{bozon} \\
+    neutrino $\nu$ & $\bar\nu$ ? & ? & — \alert{fermion}: wciąż otwarte \\
+    \bottomrule
+  \end{tabular}
+  \vspace{8mm}
+
+  \begin{minipage}{0.7\textwidth}
+    \begin{block}{Majorana (1937)}
+      Równanie Diraca ma też rozwiązania \alert{rzeczywiste}:\\
+      neutralny fermion, który jest swoją własną antycząstką.
+    \end{block}
+  \end{minipage}
+\end{frame}
+
+% =============================================================================
+\czesc{2}{Druga kwantyzacja}
+% =============================================================================
+
+% plan: właściwości materiałów wynikają z kolektywnego oddziaływania elektronów
+\begin{frame}{Materiał = wiele oddziałujących elektronów}
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \foreach \x in {0,...,6} \foreach \y in {0,...,3}
+          \node[circle, fill=gray!25, draw=gray!55, inner sep=0pt, minimum size=4.5mm,
+                font=\tiny, text=gray] at (\x*0.95, \y*0.95) {$+$};
+        \foreach \x/\y in {0.45/0.40, 1.35/1.40, 2.30/0.50, 3.10/2.35, 4.05/1.25,
+                           4.90/2.65, 5.55/0.35, 0.50/2.30, 2.55/1.55, 3.70/0.20,
+                           1.75/2.75, 5.20/1.60, 0.95/1.05, 4.40/0.55}
+          \fill[mBlue] (\x,\y) circle (2.3pt);
+        \draw[mBlue!55, decorate, decoration={snake, amplitude=0.7pt, segment length=3pt}]
+          (1.35,1.40) -- (2.55,1.55)  (2.55,1.55) -- (3.10,2.35)
+          (4.05,1.25) -- (5.20,1.60)  (0.45,0.40) -- (0.95,1.05)
+          (2.30,0.50) -- (3.70,0.20)  (1.75,2.75) -- (3.10,2.35);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      {\Large $\sim 10^{23}$} elektronów w~\unit{\centi\metre\cubed}\\[8mm]
+      przewodnictwo\\
+      magnetyzm\\
+      nadprzewodnictwo\\[6mm]
+      ⇒ zjawiska \alert{kolektywne}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: podmienianie cząstek — dlaczego tylko faza? bozony i fermiony
+\begin{frame}{Zamiana dwóch identycznych cząstek}
+  \centering
+  \begin{tikzpicture}
+    \fill[mBlue] (0,0) circle (0.2) node[white, font=\scriptsize] {1};
+    \fill[mBlue] (3.2,0) circle (0.2) node[white, font=\scriptsize] {2};
+    \draw[-{Stealth}, thick, mRed] (0.25,0.22) to[bend left=35] (2.95,0.22);
+    \draw[-{Stealth}, thick, mRed] (2.95,-0.22) to[bend left=35] (0.25,-0.22);
+  \end{tikzpicture}
+  \[ \psi(x_2, x_1) = e^{i\varphi}\,\psi(x_1, x_2) \]
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \centering
+      nierozróżnialne ⇒ $|\psi|^2$ bez zmian\\
+      ⇒ zmienia się tylko \alert{faza}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \centering
+      dwie zamiany = brak zmiany\\
+      ⇒ $e^{2i\varphi} = 1$ ⇒ \alert{$e^{i\varphi} = \pm1$}
+    \end{column}
+  \end{columns}
+  \vspace{3mm}
+  \begin{columns}[T]
+    \begin{column}{0.38\textwidth}
+      \begin{block}{$+1$: bozony}
+        foton, fonon, $^4$He
+      \end{block}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \begin{block}{$-1$: fermiony}
+        elektron, proton, neutron
+      \end{block}
+    \end{column}
+  \end{columns}
+  \uwaga{W~2D „dwie zamiany” to nie zawsze „brak zmiany” — wrócimy do tego przy komputerach kwantowych.}
+\end{frame}
+
+% plan: skąd zakaz Pauliego akurat dla fermionów
+\begin{frame}{Skąd zakaz Pauliego?}
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \centering
+      dwa fermiony w~tym samym stanie:\\[2mm]
+      $\psi(x, x) = -\psi(x, x)$\\[2mm]
+      ⇓\\[2mm]
+      {\Large $\psi(x, x) = 0$}\\[6mm]
+      \alert{jeden fermion na stan}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[y=0.55cm]
+        \foreach \y in {0,...,5} {
+          \draw[thick, gray] (0,\y) -- (1.8,\y);
+          \draw[thick, gray] (3,\y) -- (4.8,\y);
+        }
+        \foreach \x in {0.25,0.55,...,1.6} \fill[mGreen] (\x,0) ++(0,3.3pt) circle (3pt);
+        \foreach \y in {0,...,3} \fill[mBlue] (3.9,\y) ++(0,3.3pt) circle (3pt);
+        \draw[dashed, mRed, thick] (2.8,3.65) -- (5.0,3.65) node[right] {$E_F$};
+        \node at (0.9,-1) {bozony};
+        \node at (3.9,-1) {fermiony};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: pierwsza kwantyzacja — wyznaczniki Slatera
+\begin{frame}{Pierwsza kwantyzacja: wyznacznik Slatera}
+  \[
+    \Psi(x_1,\dots,x_N) = \frac{1}{\sqrt{N!}}
+    \begin{vmatrix}
+      \varphi_1(x_1) & \varphi_1(x_2) & \cdots & \varphi_1(x_N)\\
+      \varphi_2(x_1) & \varphi_2(x_2) & \cdots & \varphi_2(x_N)\\
+      \vdots & \vdots & \ddots & \vdots\\
+      \varphi_N(x_1) & \varphi_N(x_2) & \cdots & \varphi_N(x_N)
+    \end{vmatrix}
+  \]
+  \vspace{4mm}
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \centering
+      zamiana kolumn → znak $-$\\[1mm]
+      \tak\ antysymetria
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \centering
+      dwa takie same wiersze → $0$\\[1mm]
+      \tak\ zakaz Pauliego
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: problemy — kosztowne obliczenia, z góry ustalone N; potrzebna rewolucja
+\begin{frame}{Problemy}
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \centering
+      {\Large $N!$} składników\\[4mm]
+      \renewcommand{\arraystretch}{1.15}
+      \begin{tabular}{rr}
+        $N$ & $N!$\\
+        \midrule
+        3  & 6\\
+        10 & \num{3628800}\\
+        20 & \num{2.4e18}\\
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \centering
+      {\Large $N$} ustalone z~góry\\[4mm]
+      a~co, gdy cząstki\\
+      \alert{powstają i~znikają}?
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{alertblock}{Zmiana perspektywy}
+    \centering
+    zamiast „\emph{która} cząstka \emph{gdzie}?” \quad → \quad
+    „\alert{\emph{ile} cząstek w~\emph{którym} stanie?}”
+  \end{alertblock}
+\end{frame}
+
+% plan: przejście na drugą kwantyzację
+\begin{frame}{Druga kwantyzacja: liczby obsadzeń}
+  \begin{columns}[c]
+    \begin{column}{0.4\textwidth}
+      \centering
+      \begin{tikzpicture}[y=0.7cm]
+        \foreach \i/\n in {1/1, 2/0, 3/1, 4/1, 5/0} {
+          \draw[thick, gray] (0,\i) -- (1.8,\i);
+          \node[left] at (0,\i) {$\varphi_\i$};
+          \node[right, font=\small] at (2.0,\i) {$n_\i = \n$};
+          \ifnum\n=1 \fill[mBlue] (0.9,\i) ++(0,4pt) circle (3.5pt); \fi
+        }
+        \node at (1.3,0) {$\ket{1,0,1,1,0}$};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \textcolor{gray}{$\Psi(x_1,\dots,x_N)$}\\[2mm]
+      ⇓\\[2mm]
+      {\Large $\ket{n_1, n_2, n_3, \dots}$}\\[8mm]
+      fermiony: \alert{$n_i \in \{0, 1\}$}\\[3mm]
+      $N = \sum_i n_i$ — \alert{nie musi być stałe}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: pojedynczy fermion — zero lub jeden — kubit; 2-wymiarowa przestrzeń;
+%       ortonormalność i zupełność
+\begin{frame}{Jeden stan fermionowy}
+  \begin{columns}[c]
+    \begin{column}{0.42\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \draw[thick, gray] (0,0) -- (1.5,0);
+        \node[below=3pt] at (0.75,0) {$\ket{0}$ pusty};
+        \draw[thick, gray] (2.8,0) -- (4.3,0);
+        \fill[mBlue] (3.55,0) ++(0,4pt) circle (3.5pt);
+        \node[below=3pt] at (3.55,0) {$\ket{1}$ zajęty};
+      \end{tikzpicture}\\[10mm]
+      {\Large $\dim\mathcal{H} = 2$}\\[2mm]
+      jak \alert{kubit}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      ortonormalność
+      \[ \braket{0|0} = \braket{1|1} = 1, \qquad \braket{0|1} = 0 \]
+      zupełność
+      \[ \ket0\bra0 + \ket1\bra1 = \mathbb{1} \]
+      \[
+        \ket0 = \begin{pmatrix}1\\0\end{pmatrix}, \qquad
+        \ket1 = \begin{pmatrix}0\\1\end{pmatrix}
+      \]
+    \end{column}
+  \end{columns}
+  \uwaga{„0” i~„1” to na razie tylko \emph{nazwy} stanów.}
+\end{frame}
+
+% plan: operatory kreacji i anihilacji, zasady działania, postać ketbra
+\begin{frame}{Operatory kreacji i anihilacji}
+  \begin{columns}[c]
+    \begin{column}{0.42\textwidth}
+      \centering
+      \begin{tikzpicture}[
+          st/.style={draw=mDark, rounded corners=3pt, minimum width=1.4cm, minimum height=0.8cm}]
+        \node[st] (z) at (0,0) {$\ket0$};
+        \node[st] (j) at (0,2.6) {$\ket1$};
+        \draw[-{Stealth}, very thick, mBlue] ([xshift=-3mm]z.north) to[bend left=35]
+          node[left] {$c^\dagger$} ([xshift=-3mm]j.south);
+        \draw[-{Stealth}, very thick, mRed] ([xshift=3mm]j.south) to[bend left=35]
+          node[right] {$c$} ([xshift=3mm]z.north);
+        \node[gray] (o1) at (2.3,2.6) {$0$};
+        \draw[-{Stealth}, gray, dashed] (j.east) -- node[above, font=\scriptsize] {$c^\dagger$} (o1);
+        \node[gray] (o0) at (2.3,0) {$0$};
+        \draw[-{Stealth}, gray, dashed] (z.east) -- node[below, font=\scriptsize] {$c$} (o0);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \[ c^\dagger = \ket1\bra0, \qquad c = \ket0\bra1 \]
+      \begin{align*}
+        c^\dagger\ket0 &= \ket1, & c^\dagger\ket1 &= 0,\\
+        c\ket1 &= \ket0, & c\ket0 &= 0.
+      \end{align*}
+      \[
+        c^\dagger = \begin{pmatrix}0&0\\1&0\end{pmatrix}, \qquad
+        c = \begin{pmatrix}0&1\\0&0\end{pmatrix}
+      \]
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: (dlaczego) operatory są zupełne — ich span to cała przestrzeń operatorów
+\begin{frame}{Dlaczego $c$ i~$c^\dagger$ wystarczą?}
+  \centering
+  każdy operator na tym stanie to macierz $2\times2$\\[5mm]
+  \begin{columns}[c]
+    \begin{column}{0.35\textwidth}
+      \centering
+      \[
+        \hat O = \begin{pmatrix} O_{00} & O_{01}\\ O_{10} & O_{11}\end{pmatrix}
+      \]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \renewcommand{\arraystretch}{1.8}
+      \begin{tabular}{c|c}
+        $\ket0\bra0 = \cz{c\,c^\dagger}$ & $\ket0\bra1 = \cz{c}$ \\
+        \hline
+        $\ket1\bra0 = \cz{c^\dagger}$ & $\ket1\bra1 = \cz{c^\dagger c}$
+      \end{tabular}
+    \end{column}
+  \end{columns}
+  \vspace{6mm}
+  \[
+    \hat O = O_{00}\,c\,c^\dagger + O_{01}\,c + O_{10}\,c^\dagger + O_{11}\,c^\dagger c
+  \]
+\end{frame}
+
+% plan: operatory nie są hermitowskie → w hamiltonianie tylko parami
+\begin{frame}{Hamiltonian: operatory parami}
+  \centering
+  $c^\dagger \neq c$ \quad ⇒ \quad nie są hermitowskie — \alert{nie są obserwablami}\\[3mm]
+  $H = H^\dagger$ \quad ⇒ \quad $c$ i~$c^\dagger$ występują \alert{parami}\\[8mm]
+  \renewcommand{\arraystretch}{1.6}
+  \begin{tabular}{cll}
+    \nie & $c$, \ $c^\dagger$ & \\
+    \tak & $\varepsilon\,c^\dagger c$ & energia stanu \\
+    \tak & $c_i^\dagger c_j + c_j^\dagger c_i$ & przeskok $i \leftrightarrow j$ \\
+    \tak & $c_i c_j + c_j^\dagger c_i^\dagger$ & parowanie \textcolor{gray}{(przyda się!)} \\
+  \end{tabular}
+\end{frame}
+
+% plan: c†c jako operator liczby obsadzeń, wartości własne {0,1}, hermitowskość
+\begin{frame}{Operator liczby obsadzeń $\hat n = c^\dagger c$}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{align*}
+        \hat n\ket0 &= c^\dagger c\ket0 = \cz{0}\cdot\ket0\\
+        \hat n\ket1 &= c^\dagger c\ket1 = \cz{1}\cdot\ket1
+      \end{align*}
+      \[ \hat n^\dagger = (c^\dagger c)^\dagger = c^\dagger c = \hat n \]
+      \centering
+      hermitowski ⇒ \alert{obserwabla}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \centering
+      wartości własne $\{0, 1\}$\\[2mm]
+      ⇓\\[2mm]
+      „0” i~„1” to \alert{liczba cząstek}\\
+      w~danym stanie\\[8mm]
+      $\hat N = \sum_i \hat n_i$
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: wszystkie relacje komutacji i antykomutacji
+\begin{frame}{Relacje antykomutacji}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{block}{Fermiony: \ $\{A,B\} = AB + BA$}
+        \vspace{-4mm}
+        \begin{align*}
+          \{c_i, c_j^\dagger\} &= \delta_{ij}\\
+          \{c_i, c_j\} &= \{c_i^\dagger, c_j^\dagger\} = 0
+        \end{align*}
+      \end{block}
+      \vspace{3mm}
+      $(c_i^\dagger)^2 = 0$ \hfill → \alert{zakaz Pauliego}\\[2mm]
+      $c_i^\dagger c_j^\dagger = -c_j^\dagger c_i^\dagger$ \hfill → \alert{antysymetria}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{block}{Bozony: \ $[A,B] = AB - BA$}
+        \vspace{-4mm}
+        \[ [a_i, a_j^\dagger] = \delta_{ij}, \qquad [a_i, a_j] = 0 \]
+      \end{block}
+      \vspace{3mm}
+      \centering
+      $\hat n$ liczy cząstki:
+      \begin{align*}
+        [\hat n_i, c_j^\dagger] &= +\delta_{ij}\,c_j^\dagger\\
+        [\hat n_i, c_j] &= -\delta_{ij}\,c_j
+      \end{align*}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: zalety formalizmu
+\begin{frame}{Co zyskujemy}
+  \centering
+  cały układ wielu ciał w~jednej linii:
+  \[
+    H = \underbrace{\sum_{ij} t_{ij}\, c_i^\dagger c_j}_{\mathclap{\text{\small ruch}}}
+      \;+\; \underbrace{\frac12 \sum_{ijkl} V_{ijkl}\, c_i^\dagger c_j^\dagger c_l c_k}_{\mathclap{\text{\small oddziaływanie}}}
+  \]
+  \vspace{6mm}
+  \begin{columns}[T]
+    \begin{column}{0.3\textwidth}
+      \centering
+      \alert{statystyka}\\ wbudowana w~algebrę
+    \end{column}
+    \begin{column}{0.3\textwidth}
+      \centering
+      $N$ \alert{nie} jest\\ ustalone
+    \end{column}
+    \begin{column}{0.3\textwidth}
+      \centering
+      rachunki = \alert{(anty)komutatory}\\ zamiast wyznaczników
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =============================================================================
+\czesc{3}{Majorany z matematyki}
+% =============================================================================
+
+% plan: w ciele stałym c, c† dotyczą elektronów i dziur
+\begin{frame}{W~ciele stałym: elektrony i~dziury}
+  \begin{columns}[c]
+    \begin{column}{0.44\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \fill[mDark!25] (0,0) rectangle (3.4,1.6);
+        \fill[mBlue!8] (0,1.6) rectangle (3.4,3.2);
+        \draw[-{Stealth}] (-0.3,0) -- (-0.3,3.4) node[above] {$E$};
+        \draw[dashed, mRed, thick] (-0.1,1.6) -- (3.5,1.6) node[right] {$E_F$};
+        \node[font=\scriptsize] at (1.7,0.25) {stany obsadzone};
+        \node[font=\scriptsize] at (1.7,2.95) {stany puste};
+        \fill[mBlue] (1.0,2.3) circle (4pt) node[right=4pt] {$e^-$};
+        \draw[mRed, very thick, fill=white] (2.3,0.9) circle (4pt) node[right=4pt] {$h^+$};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      $c^\dagger$ — dodaje elektron \hfill $-e$\\[4mm]
+      $c$ — zabiera elektron = tworzy \alert{dziurę} \hfill $+e$\\[10mm]
+      \centering
+      dziura = „antycząstka” elektronu\\
+      \textcolor{gray}{\small(jak pozyton w~morzu Diraca)}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: idea — pół zwykłego fermionu; rozdzielenie operatorów kreacji i anihilacji
+\begin{frame}{Pomysł: fermion z~dwóch „połówek”}
+  \begin{columns}[c]
+    \begin{column}{0.42\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \fill[mBlue] (0,0.9) arc (90:270:0.9) -- cycle;
+        \fill[mRed] (0,-0.9) arc (-90:90:0.9) -- cycle;
+        \node at (0,-1.3) {$c$};
+        \draw[-{Stealth}, thick] (1.2,0) -- (2.0,0);
+        \fill[mBlue] (3.1,0.9) arc (90:270:0.9) -- cycle;
+        \fill[mRed] (3.7,-0.9) arc (-90:90:0.9) -- cycle;
+        \node[white] at (2.72,0) {$\gamma_1$};
+        \node[white] at (4.08,0) {$\gamma_2$};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \centering
+      \[ c = \tfrac12\,(\gamma_1 + i\gamma_2) \]
+      \textcolor{gray}{jak \ $z = x + iy$}\\[6mm]
+      \[ \gamma_1 = c + c^\dagger, \qquad \gamma_2 = i\,(c^\dagger - c) \]
+      „część rzeczywista” i~„urojona” fermionu
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% plan: superpozycja fermionu i antycząstki = elektronu i dziury; hermitowskie
+\begin{frame}{Majorana = elektron + dziura}
+  \centering
+  \begingroup\LARGE
+  \[
+    \gamma_1 = \underset{\text{\normalsize\color{mBlue}elektron}}{\textcolor{mBlue}{c^\dagger}}
+             \;+\; \underset{\text{\normalsize\color{mRed}dziura}}{\textcolor{mRed}{c}}
+  \]
+  \endgroup
+  \vspace{2mm}
+  cząstka i~antycząstka \alert{w~równych proporcjach}\\[10mm]
+  {\Large $\gamma^\dagger = \gamma$} \quad ⇒ \quad \alert{cząstka = własna antycząstka}
+\end{frame}
+
+% plan: hermitowskie → nie są (zwykłymi) fermionami — coś niezwykłego
+\begin{frame}{To nie jest zwykły fermion}
+  \centering
+  \renewcommand{\arraystretch}{1.7}
+  \begin{tabular}{lcc}
+    & fermion $c$ & Majorana $\gamma$\\
+    \midrule
+    sprzężenie   & $c^\dagger \neq c$                  & $\cz{\gamma^\dagger = \gamma}$\\
+    kwadrat      & $c^2 = 0$                           & $\cz{\gamma^2 = 1}$\\
+    antykomutator & $\{c_i, c_j^\dagger\} = \delta_{ij}$ & $\{\gamma_i, \gamma_j\} = 2\delta_{ij}$\\
+    obsadzenie   & $c^\dagger c \in \{0, 1\}$          & $\cz{\gamma^\dagger\gamma = 1}$ — zawsze\\
+  \end{tabular}
+  \vspace{8mm}
+
+  stan niesie dopiero \alert{para} Majoran: \qquad
+  $\hat n = c^\dagger c = \tfrac12\,(1 + i\gamma_1\gamma_2)$
+\end{frame}
+
+% plan: gdzie szukać? półprzewodniki — nie można mieszać e i h (ładunek)
+\begin{frame}{Gdzie szukać? Półprzewodnik — nie}
+  \centering
+  \vfill
+  \begin{tikzpicture}
+    \node (s) {\LARGE $u\,\ket{e^-} + v\,\ket{h^+}$};
+    \node[right=5mm of s, text=mRed, font=\Huge] {$\times$};
+  \end{tikzpicture}\\[6mm]
+  ładunek $-e$ \quad i \quad ładunek $+e$\\[2mm]
+  \alert{zasada zachowania ładunku} zabrania takiej superpozycji\\[10mm]
+  potrzebny układ, w~którym ładunek elektronu może „zniknąć”
+  \vfill
+\end{frame}
+
+% plan: BCS — kwazicząstki Bogoliubowa = superpozycja elektronu i dziury
+\begin{frame}{Nadprzewodnik: kwazicząstki Bogoliubowa}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \draw[rounded corners=8pt, fill=mBlue!8, draw=mBlue!45] (0,0) rectangle (4,2.2);
+        \foreach \x/\y in {0.7/0.6, 2.0/0.6, 3.3/0.6, 1.1/1.6, 2.4/1.6, 3.4/1.6} {
+          \draw[mBlue!55] (\x,\y) ellipse (0.32 and 0.18);
+          \fill[mBlue] (\x-0.13,\y) circle (1.8pt);
+          \fill[mBlue] (\x+0.13,\y) circle (1.8pt);
+        }
+        \node[font=\scriptsize, mBlue!70!black] at (2,-0.3) {kondensat par Coopera};
+        \fill[mRed] (5.3,1.1) circle (4pt) node[above=4pt] {$b$};
+        \draw[{Stealth}-{Stealth}, thick, mRed] (4.15,1.1) --
+          node[below, font=\scriptsize] {$2e$} (5.05,1.1);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      kondensat \alert{wymienia ładunek $2e$}\\
+      z~wzbudzeniami (BCS)\\[5mm]
+      kwazicząstka Bogoliubowa:
+      \[ b = u\,c^\dagger + v\,c \]
+      elektron \alert{i}~dziura naraz\\[4mm]
+      $u = v^*$ \ ⇒ \ $\cz{b = b^\dagger}$
+    \end{column}
+  \end{columns}
+  \uwaga{Zwykły nadprzewodnik (s-wave): $b = u\,c^\dagger_\uparrow + v\,c_\downarrow$ — różne spiny,
+    to jeszcze nie Majorana. Potrzebne parowanie elektronów o~\emph{jednym} spinie → łańcuch Kitaeva.}
+\end{frame}
+
+% plan: łańcuch Kitaeva
+\begin{frame}{Łańcuch Kitaeva (2001)}
+  \centering
+  elektrony \alert{bez spinu} (jeden rodzaj) na łańcuchu $N$ węzłów
+  \[
+    H = \underbrace{-\mu\sum_{i} c_i^\dagger c_i}_{\mathclap{\text{\small potencjał chemiczny}}}
+      \;-\; \sum_{i}\Bigl(\underbrace{t\,c_i^\dagger c_{i+1}}_{\mathclap{\text{\small przeskok}}}
+      \;+\; \underbrace{\Delta\,c_i c_{i+1}}_{\mathclap{\text{\small parowanie}}} \;+\; \hc\Bigr)
+  \]
+  \vspace{6mm}
+  w~każdym węźle: \qquad $c_i = \tfrac12\,(\gamma_{i,1} + i\gamma_{i,2})$
+  \zrodlo{A.\,Yu.~Kitaev, Phys.-Usp. 44, 131 (2001)}
+\end{frame}
+
+\begin{frame}{Punkt $\mu = 0$, $t = \Delta$: Majorany bez pary}
+  \centering
+  \includegraphics[width=0.66\linewidth]{fig/ref/rys1.png}\\[3mm]
+  \begin{columns}[T]
+    \begin{column}{0.46\textwidth}
+      \centering
+      $H = 2t\sum_{i=1}^{N-1}\tilde c_i^\dagger\tilde c_i + \text{const}$\\[1mm]
+      \textcolor{gray}{\small$\tilde c_i = \tfrac12\,(\gamma_{i+1,1} + i\gamma_{i,2})$}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      $\gamma_{1,1}$, $\gamma_{N,2}$ — \alert{nie ma ich w~$H$}, $E = 0$\\[1mm]
+      $\tilde c_M = \tfrac12\,(\gamma_{N,2} + i\gamma_{1,1})$ — \alert{nielokalny}
+    \end{column}
+  \end{columns}
+  \zrodlo{Rys.: M.~Leijnse, K.~Flensberg, Semicond. Sci. Technol. 27, 124003 (2012), rys.~1}
+\end{frame}
+
+\begin{frame}{Mody zerowe na końcach łańcucha}
+  \begin{columns}[c]
+    \begin{column}{0.58\textwidth}
+      \includegraphics[width=\linewidth]{fig/kitaev_mody.pdf}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      dwie Majorany na \alert{przeciwnych końcach}\\[5mm]
+      poza punktem specjalnym:\\ zanik $\sim e^{-x/\xi}$\\[5mm]
+      istnieją dla $|\mu| < 2t$:\\ \alert{faza topologiczna}
+    \end{column}
+  \end{columns}
+  \zrodlo{Obliczenia własne (\texttt{sim/wykresy.py}): $N{=}30$, $\Delta{=}0.5\,t$}
+\end{frame}
+
+% =============================================================================
+\czesc{4}{Realizacja fizyczna}
+% =============================================================================
+
+\begin{frame}{Przepis: nanodrut + nadprzewodnik + pole $B$}
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      \includegraphics[width=\linewidth]{fig/ref/rys4.png}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{itemize}
+        \item nadprzewodnik (Al) → $\Delta$
+        \item drut InSb / InAs → silne sprzężenie \alert{spin–orbita}
+        \item pole $B$ → \alert{„jeden spin”}
+        \item bramki → potencjał $\mu$
+      \end{itemize}
+      \vspace{4mm}
+      \centering
+      faza topologiczna:\\[1mm]
+      $V_Z = \tfrac12 g\mu_B B > \sqrt{\Delta^2 + \mu^2}$
+    \end{column}
+  \end{columns}
+  \zrodlo{Rys.: Leijnse, Flensberg (2012), rys.~4; Lutchyn i in., PRL 105, 077001 (2010); Oreg i in., PRL 105, 177002 (2010)}
+\end{frame}
+
+\begin{frame}{Co widać w~drucie InSb/Al}
+  \begin{columns}[c]
+    \begin{column}{0.6\textwidth}
+      \includegraphics[width=\linewidth]{fig/drut_EB.pdf}
+    \end{column}
+    \begin{column}{0.37\textwidth}
+      przerwa się \alert{zamyka}\ldots\\[2mm]
+      \ldots i~otwiera ponownie\\ z~modem przy \alert{$E = 0$}\\[8mm]
+      w~pomiarze: pik przewodnictwa przy zerowym napięciu\\[1mm]
+      \textcolor{gray}{\small (Delft 2012 — ale sam pik to jeszcze nie dowód)}
+    \end{column}
+  \end{columns}
+  \zrodlo{Obliczenia własne (\texttt{sim/wykresy.py}); V.~Mourik i in., Science 336, 1003 (2012)}
+\end{frame}
+
+% =============================================================================
+\czesc{5}{Komputery kwantowe}
+% =============================================================================
+
+\begin{frame}{Informacja zapisana nielokalnie}
+  \centering
+  \vfill
+  \begin{tikzpicture}
+    \fill[mBlue!25] (0,0.5) rectangle (8,0.72);
+    \shade[left color=gray!45, right color=gray!65, rounded corners=3pt] (0,0) rectangle (8,0.5);
+    \node[font=\tiny] at (4,0.61) {nadprzewodnik};
+    \node[font=\scriptsize, white] at (4,0.25) {nanodrut};
+    \fill[mRed] (0.35,0.25) circle (0.13);
+    \fill[mRed] (7.65,0.25) circle (0.13);
+    \node[below=1pt] at (0.35,0) {$\gamma_1$};
+    \node[below=1pt] at (7.65,0) {$\gamma_2$};
+    \draw[dashed, thick, mBlue] (0.35,0.75) .. controls (2,1.9) and (6,1.9) .. (7.65,0.75);
+    \node[mBlue, fill=white, inner sep=2pt] at (4,1.62) {$c = \tfrac12(\gamma_1 + i\gamma_2)$};
+    \draw[-{Stealth}, very thick, orange!90!black, decorate,
+          decoration={zigzag, segment length=4pt, amplitude=1.5pt, post length=3pt}]
+          (-1.3,1.3) -- (0.15,0.45);
+    \node[font=\scriptsize] at (-1.5,1.6) {lokalny szum};
+    \draw[{Stealth}-{Stealth}] (0.35,-0.6) -- node[fill=white, font=\scriptsize] {$L \gg \xi$} (7.65,-0.6);
+  \end{tikzpicture}\\[10mm]
+  lokalny szum „widzi” tylko \alert{połowę} fermionu\\[2mm]
+  błędy tłumione $\propto e^{-L/\xi}$ — ochrona \alert{sprzętowa}
+  \vfill
+\end{frame}
+
+\begin{frame}{Wymiana Majoran: nie faza, lecz macierz}
+  \begin{columns}[c]
+    \begin{column}{0.34\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.9]
+        \draw[-{Stealth}, gray] (-0.7,0) -- (-0.7,3.2) node[above, font=\small] {czas};
+        \draw[very thick, mRed] (0,0) -- (0,3);
+        \draw[very thick, mRed] (3,0) -- (3,3);
+        \draw[very thick, mGreen] (2,0) -- (2,1) .. controls (2,1.5) and (1,1.5) .. (1,2) -- (1,3);
+        \draw[line width=5pt, white] (1,1.05) .. controls (1,1.5) and (2,1.5) .. (2,1.95);
+        \draw[very thick, mBlue] (1,0) -- (1,1) .. controls (1,1.5) and (2,1.5) .. (2,2) -- (2,3);
+        \foreach \x/\l in {0/1, 1/2, 2/3, 3/4} \node[below, font=\small] at (\x,0) {$\gamma_\l$};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.62\textwidth}
+      fermiony: zamiana → liczba $-1$\\[2mm]
+      Majorany (2D): zamiana → \alert{operator}
+      \[ U_{ij} = e^{\frac{\pi}{4}\gamma_i\gamma_j} = \tfrac{1}{\sqrt2}\,(1 + \gamma_i\gamma_j) \]
+      \[ U_{12}\,U_{23} \neq U_{23}\,U_{12} \quad \text{— \alert{nieabelowe}} \]
+      4 Majorany = 1 kubit\\[1mm]
+      bramki = \alert{splatanie} ścieżek (braiding)
+    \end{column}
+  \end{columns}
+  \zrodlo{D.\,A.~Ivanov, PRL 86, 268 (2001); Leijnse, Flensberg (2012)}
+\end{frame}
+
+% =============================================================================
+\section*{Podsumowanie}
+% =============================================================================
+
+\begin{frame}{Podsumowanie}
+  \centering\vfill
+  \begin{tikzpicture}[
+      k/.style={draw=mDark!45, rounded corners=3pt, fill=mBlue!6, align=center,
+                font=\small, text=mDark, minimum height=1.2cm, text width=2.6cm},
+      s/.style={-{Stealth}, thick, mDark!50}]
+    \node[k] (a) at (0,0)     {zamiana cząstek\\ $\pm1$};
+    \node[k] (b) at (3.5,0)   {$c$, $c^\dagger$\\ antykomutacja};
+    \node[k] (c) at (7,0)     {$\gamma = \gamma^\dagger$\\ pół fermionu};
+    \node[k] (d) at (10.5,0)  {kwazicząstka\\ Bogoliubowa};
+    \node[k] (e) at (10.5,-2.2) {łańcuch\\ Kitaeva};
+    \node[k] (f) at (7,-2.2)  {nanodrut\\ + Al + $B$};
+    \node[k, draw=mRed, fill=mRed!7, line width=1pt] (g) at (3.5,-2.2) {kubit\\ topologiczny};
+    \draw[s] (a) -- (b);
+    \draw[s] (b) -- (c);
+    \draw[s] (c) -- (d);
+    \draw[s] (d) -- (e);
+    \draw[s] (e) -- (f);
+    \draw[s] (f) -- (g);
+  \end{tikzpicture}
+  \vfill
+\end{frame}
+
+\begin{frame}[standout]
+  Dziękuję!\\[4mm]
+  {\normalsize Pytania?}
+\end{frame}
+
+\begin{frame}{Bibliografia}
+  \small
+  \begin{itemize}\setlength{\itemsep}{2pt}
+    \item[{[1]}] M.~Leijnse, K.~Flensberg, \emph{Introduction to topological superconductivity
+          and Majorana fermions}, Semicond. Sci. Technol. \textbf{27}, 124003 (2012), arXiv:1206.1736.
+    \item[{[2]}] \emph{Second quantization: basics}, Dr Mitchell's physics channel (YouTube),
+          \url{https://youtu.be/6RhjrdnDUNI}
+    \item[{[3]}] S.~Frolov, \emph{Majorana Fermions in Nanowires} (YouTube),
+          \url{https://youtu.be/kh1u9Q5D47w}
+    \item[{[4]}] 3Blue1Brown, \emph{But what is quantum computing? (Grover's Algorithm)} (YouTube),
+          \url{https://youtu.be/RQWpF2Gb-gU}
+    \item[{[5]}] Claude (Anthropic), \url{https://claude.ai}
+  \end{itemize}
+  \vspace{1mm}
+  {\scriptsize
+  \textcolor{gray}{Cytowane na slajdach:}
+  E.~Majorana, Nuovo Cimento \textbf{14}, 171 (1937) \textperiodcentered{}
+  A.\,Yu.~Kitaev, Phys.-Usp. \textbf{44}, 131 (2001) \textperiodcentered{}
+  D.\,A.~Ivanov, PRL \textbf{86}, 268 (2001) \textperiodcentered{}
+  R.\,M.~Lutchyn, J.\,D.~Sau, S.~Das Sarma, PRL \textbf{105}, 077001 (2010) \textperiodcentered{}
+  Y.~Oreg, G.~Refael, F.~von Oppen, PRL \textbf{105}, 177002 (2010) \textperiodcentered{}
+  V.~Mourik i in., Science \textbf{336}, 1003 (2012).\par}
+\end{frame}
+
+\end{document}

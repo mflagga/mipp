@@ -7,6 +7,9 @@ Prezentacja (LaTeX/beamer) na przedmiot **„Materiały i przyrządy półprzewo
 - Gotowy PDF: [`prezentacja.pdf`](prezentacja.pdf).
 - Stan: **pierwszy szkic** — otwarte sprawy w [`TODO.md`](TODO.md).
 - Jak pracujemy razem (git, konwencje w kodzie): [`WSPOLPRACA.md`](WSPOLPRACA.md).
+- **Nowa koncepcja** wg [`plan.txt`](plan.txt) (druga kwantyzacja → Majorany → realizacja → kubit):
+  [`slajdy.tex`](slajdy.tex) → [`slajdy.pdf`](slajdy.pdf), budowanie: `make slajdy`.
+  Poprzednia wersja (`main.tex`, plan w `src/initial_plan.txt`) zostaje bez zmian.
 
 ## Struktura repozytorium
 
