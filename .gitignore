@@ -13,11 +13,13 @@
 # źródło prezentacji i budowanie
 !main.tex
 !slajdy.tex
+!prezentacja_finalna.tex
 !makefile
 
 # gotowy PDF (wynik `make`)
 !prezentacja.pdf
 !slajdy.pdf
+!prezentacja_finalna.pdf
 
 # rysunki: własne wykresy (fig/*.pdf) i rysunki z literatury (fig/ref/)
 !fig/**
@@ -29,3 +31,5 @@
 # plan prezentacji (PDF artykułu bazowego celowo NIE jest w repo — patrz README)
 !src/initial_plan.txt
 !plan.txt
+# slajdy kolegi (część 5) — potrzebne do `make final`
+!src/Majorany w nanodrucie warunki i eksperyment.pdf

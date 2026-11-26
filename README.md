@@ -7,9 +7,17 @@ Prezentacja (LaTeX/beamer) na przedmiot **„Materiały i przyrządy półprzewo
 - Gotowy PDF: [`prezentacja.pdf`](prezentacja.pdf).
 - Stan: **pierwszy szkic** — otwarte sprawy w [`TODO.md`](TODO.md).
 - Jak pracujemy razem (git, konwencje w kodzie): [`WSPOLPRACA.md`](WSPOLPRACA.md).
-- **Nowa koncepcja** wg [`plan.txt`](plan.txt) (druga kwantyzacja → Majorany → realizacja → kubit):
-  [`slajdy.tex`](slajdy.tex) → [`slajdy.pdf`](slajdy.pdf), budowanie: `make slajdy`.
-  Poprzednia wersja (`main.tex`, plan w `src/initial_plan.txt`) zostaje bez zmian.
+- **Nowa koncepcja** wg [`plan.txt`](plan.txt) (cząstki i antycząstki → druga kwantyzacja →
+  Majorany z matematyki → właściwości Majoran → realizacja fizyczna):
+  [`slajdy.tex`](slajdy.tex) → [`slajdy.pdf`](slajdy.pdf) (części 1–4), budowanie: `make slajdy`.
+- **Finalna prezentacja** (jeden PDF): części 1–4 z `slajdy.tex` + część 5 — slajdy kolegi
+  z `src/Majorany w nanodrucie warunki i eksperyment.pdf`, wklejone jako strony
+  (numer strony dopisany w rogu, na jego stronie tytułowej zasłonięte pole „[Imiona i nazwiska]”).
+  [`prezentacja_finalna.tex`](prezentacja_finalna.tex) → [`prezentacja_finalna.pdf`](prezentacja_finalna.pdf),
+  budowanie: `make final`. Wygląd (kolory, EB Garamond + Inter, kremowe tło) skopiowany ze slajdów
+  kolegi. Imiona i datę ustawia się w `\prelegentA`, `\prelegentB`, `\dataWystapienia` w `slajdy.tex`.
+  Wykresy do tej wersji: `fig/final/*.pdf` z funkcji `wykresy_final()` w `sim/wykresy.py`.
+- Poprzednia wersja (`main.tex`, plan w `src/initial_plan.txt`) zostaje bez zmian.
 
 ## Struktura repozytorium
 
@@ -64,6 +72,8 @@ i tak powstaną, tylko będą wyglądać trochę inaczej.
 ```sh
 make            # main.tex -> prezentacja.pdf (tylko jeśli coś się zmieniło)
 make rep        # wymuszona ponowna kompilacja
+make slajdy     # slajdy.tex -> slajdy.pdf (nowa koncepcja, części 1–4)
+make final      # prezentacja_finalna.tex -> prezentacja_finalna.pdf (całość z częścią kolegi)
 make wykresy    # python3 sim/wykresy.py -> fig/*.pdf (ok. 30 s)
 make clean      # usuwa prezentacja.pdf
 ```

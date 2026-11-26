@@ -1,8 +1,8 @@
 cząstki i antycząstki
 formalizm drugiej kwantyzacji
 istnienie fermionów majorany z matematyki
+wlasciwosci fermionow majorany
 realizacja w układach fizycznych
-komputery kwantowe
 
 -- formalizm drugiej kwantyzacji (raczej speedrunowany niżeli faktycznie tłumaczone jak na kursie)
     właściwości prawdziwych materiałów i układów materii skondensowanej wynikają z kolektywnego oddziaływania elektronów
@@ -21,7 +21,7 @@ komputery kwantowe
     operatory nie są hermitowskie więc nie możemy skonstruować hamiltonianu z ich samych a jedynie mogą występować parami
     para c^{dagger}c jako własny operator - jego wartości własne w zbiorze {0,1} nadają szczególną wartość wcześniejszemu "arbitrarnmu" oznaczeniu stanów jako zero i jeden
     \hat{n} jako number operator - hermitowskość
-        number operator po polsku (chyba operator liczby obsadzeń)
+    operator liczby obsadzen jako jdeyne co mozemy wsadzic do hamilotnianu
     wszystkie relacje komutacji i antykomutacji
     zalety takiego formalizmu - kompaktowy sposób na przedstawienie układów n-czatkowych - wszystkie wlasciwosci operatorow wyrazone w zaleznosciach (anty)komutatorów - obliczenia dużo łatwiejsze
 
@@ -33,9 +33,67 @@ komputery kwantowe
     operatory hermitowskie - fermiony majorany są własnymi antycząstkami - dlatego nie są fermionami - coś niezwykłego dla układów fermionowych
     z postaci operatorów majorany możemy powiedzieć, że są superpozycją elektronu i dziury
     gdzie szukac takich czastek? - w polprzewodnikach ciezko bo rozróżniamy elektron i dziurę i nie możemy ich mieszać ze sobą ze względu na ładunek
-    okazuje się, że BCS theory w nadprzewodnikach przewiduje kwazicząstki bogoliubova które mają dokładnie postać superpozycji elektronu i dziury
+    wstep do nadprzewodnikow
+    pary coopera - czym są intuicyjnie 
+        przelatujacy elektron tworzy defekt w sieci krystalicnej
+        jony reaguja duzo wolniej niz przelatujacy elektron
+        przyciagaja kolejny elektron
+        tworza pare coopera
+        przeciwne pedy i spiny - tutaj jakis wzor pokazujacy ze tak jest
+        przeciwny ped nie znaczy ze sie poruszaja w przeciwna strone
+        mozna sobie wyobrazic ze kraza wokol siebie (kwantowo mechanicznie)
+        takie pary sa ogromne (czasami rzedu mikrometrow)
+        tworza kondensat par coopera
+        moze przyjac albo oddac pare 2e
+    przerwa energetyczna
+        przerwa energetyczna jako fakt doswiadczalny
+        każdy nadprzewodnik ma własną wartość przerwy
+        rzędu 1 meV gdzie energia Fermiego jest rzedu eV wiec jest raczej mala i dotyczy jedynie cienkiej warstwy przy energii fermiego
+        nawet w 0K, najtańsze wzbudzenie kosztuje skonczona energie 
+        w kontrze do zwyklych przewodnikow gdzie prad plynie od dowolnie malego napiecia
+        najprostsza interpretacja - zeby wzbudzic nadpzewodnik trzeba rozerwac pare coopera
+    odbicie andreeva
+        kondensat wpuszcza elektrony jedynie parami
+        elektron z metalu musi wziąć ze sobą kolejny elektron o preciwnym pedzie i spinie aby został wpuszczony
+        metal otrzymuje dodatkowa dziure
+        na dobra sprawe nadprzewodnik zmienil elektron w dziure z punktu widzenia metalu
+    kwazicząstki bogolubova
+        jeżeli jestesmy w ukladzie gdzie sens mają jedynie pary to czym jest pojedynczy elektron?
+        problem wlasny pokazujacy przerwe energetyczna i superpozycje elektronu i dziury jako stan wlasny
+        wykres energii 
+        relacja komutacji hamilotnianu z operatorem gamma - z niej relacja \gamma^{\dagger}(E)=\gamma(-E)
+    prejscie do fermionow majorany
+        dla E=0 fermion majorany
+        zaznaczyć problemy, że to wciąż dotyczy cząstek o różnym spinie więc w innych stanach i ciężko o zerową energię
+        moze styk nadprzewodnika i metalu/polprzewodnika jest dobrym miejscem na szukanie fermionow majorany
+        mamy spełnioną superpozycje elektronu i dziury
+        brakuje nam E=0 ponieważ zero-point energy oraz minimalna energia E=\Delta
+        spin preszkadza
+    njaprostszy model - łańcuch kiteava
+        jednowymiarowy lancuch
+        dużo uproszczeń - bezspinowe elektrony - parowanie jest jednospinowe
+        zapisujemy hamiltonian jak w artykule wzór (1)
+        uwzglednia potencjal chemiczny; hopping i przerwe energetyczna
+        zapisujemy rownanie za pomoca operatorow majorany
+        specjalny punkt - mu=0 - t=Delta
+        full przeksztalcenie hamiltonianu
+        to jest postac diagonalna ale jeszcze nie widoczna
+        definiujemy nowy operator jako parowanie przesunietych majoran
+        postac diagonalna w postaci H = eps * \hat{n}
+        energia zwiazana z fermionami to 2t - interpretacja przerwy energetycznej Delta
+        para na koncach znika z hamiltonianu - równoważne posiadaniu 0 energii
+        wprowadzamy operator kreacji dla tych konkretnych połówek
+    wlasciwosci
+        zawsze parzysta liczba - n fermionow tworzy 2n majoran
+        nie działa zakaz pauliego - z reguły {\gamma_i,\gamma_j}=2\delta_ij wynika  \gamma^2 = 1 czyli mozemy obsadzic stan dwa razy
+        nie ma sensu pytac o obsadzenie - proba zbudowania operatora obsadzen \gamma^\dagger\gamma daje zawsze 1 
+        pomiar pojedynczej majorany nie ma sensu
+        statystyka nieabelowa
+        
 
-    lancuch kiteava
+
+
+
     
 
 

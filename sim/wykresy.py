@@ -317,10 +317,237 @@ def wykres_przerwa():
     plt.close(fig)
 
 
+# ---------------------------------------------------------------------------
+# 5. Wykresy do slajdy.tex (wersja finalna, wspólna z częścią kolegi)
+#    Paleta i czcionka (Inter) jak na slajdach kolegi, przezroczyste tło
+#    (slajdy mają kremowe tło).  Wyniki: fig/final/*.pdf
+#    Samo to:  python3 -c "import sys; sys.path.insert(0, 'sim'); import wykresy; wykresy.wykresy_final()"
+# ---------------------------------------------------------------------------
+F_NAVY = "#172033"
+F_BLUE = "#2d5baa"
+F_RUST = "#a64b16"
+F_GREEN = "#1f7a5a"
+F_PURPLE = "#6b3fa0"
+F_GREY = "#5a6170"
+F_LINE = "#b9b3a6"
+
+
+def _styl_final():
+    """rcParams dla wykresów w stylu slajdów finalnych (czcionka Inter z TeX Live)."""
+    from matplotlib import font_manager as fm
+    for d in ("/usr/share/texlive/texmf-dist/fonts/opentype/public/inter",
+              "/usr/local/texlive/2026/texmf-dist/fonts/opentype/public/inter"):
+        for name in ("Inter-Regular.otf", "Inter-Italic.otf", "Inter-Medium.otf"):
+            p = Path(d) / name
+            if p.exists():
+                fm.fontManager.addfont(str(p))
+    return {
+        "font.family": "Inter",
+        "mathtext.fontset": "custom",
+        "mathtext.rm": "Inter",
+        "mathtext.it": "Inter:italic",
+        "font.size": 7.5,
+        "axes.labelsize": 7.5,
+        "axes.titlesize": 7.5,
+        "xtick.labelsize": 6.5,
+        "ytick.labelsize": 6.5,
+        "legend.fontsize": 7,
+        "text.color": F_NAVY,
+        "axes.labelcolor": F_NAVY,
+        "axes.edgecolor": F_GREY,
+        "xtick.color": F_GREY,
+        "ytick.color": F_GREY,
+        "axes.linewidth": 0.6,
+        "xtick.major.width": 0.6,
+        "ytick.major.width": 0.6,
+        "savefig.transparent": True,
+    }
+
+
+def _mody_kitaeva(N, mu, t, delta):
+    """|psi|^2 dwóch Majoran z podprzestrzeni dwóch stanów najbliższych E = 0.
+
+    Wektor BdG (u, v) = (phi, phi) to jedna Majorana, (psi, -psi) druga; dowolna
+    kombinacja daje je z powrotem jako u + v oraz u - v.  Bierzemy oba wektory
+    własne najbliższe zera, żeby nie trafić na czystą Majoranę (wtedy u - v = 0).
+    """
+    E, V = np.linalg.eigh(kitaev_bdg(N, mu, t, delta))
+    idx = np.argsort(np.abs(E))[:2]
+    A = [V[:N, i] + V[N:, i] for i in idx]
+    B = [V[:N, i] - V[N:, i] for i in idx]
+    gA = max(A, key=np.linalg.norm)
+    gB = max(B, key=np.linalg.norm)
+    gA, gB = gA / np.linalg.norm(gA), gB / np.linalg.norm(gB)
+    if np.argmax(np.abs(gA)) > N // 2:  # gamma_A zawsze na lewym końcu
+        gA, gB = gB, gA
+    return np.abs(gA) ** 2, np.abs(gB) ** 2
+
+
+def wykresy_final():
+    out = OUT / "final"
+    out.mkdir(exist_ok=True)
+    with mpl.rc_context(_styl_final()):
+        _final_kitaev(out)
+        _final_bogolubow(out)
+        _final_przerwa(out)
+        _final_opor(out)
+    print("Zapisano do", out)
+
+
+def _final_kitaev(out):
+    # widmo BdG skończonego łańcucha w funkcji mu
+    N, t, delta = 30, 1.0, 0.5
+    mus = np.linspace(-3.2, 3.2, 641)
+    spec = np.array([np.linalg.eigvalsh(kitaev_bdg(N, m, t, delta)) for m in mus])
+    fig, ax = plt.subplots(figsize=(6.6 * CM, 4.6 * CM))
+    ax.axvspan(-2 * t, 2 * t, color=F_BLUE, alpha=0.08, lw=0)
+    ax.plot(mus, spec, color=F_LINE, lw=0.45)
+    order = np.argsort(np.abs(spec), axis=1)[:, :2]
+    low = np.take_along_axis(spec, order, axis=1)
+    low[np.abs(mus) > 2 * t] = np.nan
+    ax.plot(mus, low, color=F_RUST, lw=1.6)
+    ax.set_xlim(mus[0], mus[-1])
+    ax.set_ylim(-3.2, 3.2)
+    ax.set_xticks([-3, -2, -1, 0, 1, 2, 3])
+    ax.set_xlabel(r"$\mu/t$")
+    ax.set_ylabel(r"$E/t$")
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.text(0, 3.3, "faza topologiczna", ha="center", va="bottom", color=F_BLUE, fontsize=7,
+            clip_on=False)
+    ax.text(0, 0.22, r"mody $E=0$", ha="center", va="bottom", color=F_RUST, fontsize=7)
+    for x in (-2.6, 2.6):
+        ax.text(x, 3.3, "trywialna", ha="center", va="bottom", color=F_GREY, fontsize=6.5,
+                clip_on=False)
+    fig.savefig(out / "kitaev_widmo.pdf")
+    plt.close(fig)
+
+    # |psi|^2 Majoran: punkt specjalny i mu = 1.5 t
+    fig, axs = plt.subplots(1, 2, figsize=(6.8 * CM, 4.6 * CM), sharey=True)
+    sites = np.arange(1, N + 1)
+    for ax, (mu, d, tyt) in zip(axs, ((0.0, 1.0, r"$\mu=0,\ \Delta=t$"),
+                                       (1.5, 0.5, r"$\mu=1.5t,\ \Delta=0.5t$"))):
+        gA, gB = _mody_kitaeva(N, mu, t, d)
+        ax.bar(sites, gA, width=0.8, color=F_BLUE, lw=0)
+        ax.bar(sites, gB, width=0.8, color=F_RUST, lw=0)
+        ax.set_title(tyt, fontsize=7)
+        ax.set_xlabel(r"węzeł $i$")
+        ax.set_xlim(0, N + 1)
+        ax.set_xticks([1, 15, 30])
+        ax.spines[["top", "right"]].set_visible(False)
+    axs[0].set_ylabel(r"$|\psi_i|^2$")
+    axs[0].set_ylim(0, 1.05)
+    axs[0].set_yticks([0, 0.5, 1])
+    fig.tight_layout(w_pad=0.8)
+    fig.savefig(out / "kitaev_mody.pdf")
+    plt.close(fig)
+
+
+def _final_bogolubow(out):
+    """E(xi) = ±sqrt(xi^2 + Delta^2), kolor = udział elektronu |u|^2; obok |u|^2, |v|^2."""
+    from matplotlib.collections import LineCollection
+    from matplotlib.colors import LinearSegmentedColormap
+    cmap = LinearSegmentedColormap.from_list("eh", [F_RUST, F_PURPLE, F_BLUE])
+    xi = np.linspace(-4, 4, 801)
+    E = np.sqrt(xi ** 2 + 1)
+    u2 = 0.5 * (1 + xi / E)
+
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(12.0 * CM, 4.6 * CM),
+                                 gridspec_kw=dict(width_ratios=[1.15, 1]))
+    for sgn, w in ((1, u2), (-1, 1 - u2)):  # gałąź -E: udział elektronu = |v|^2
+        pts = np.column_stack([xi, sgn * E]).reshape(-1, 1, 2)
+        seg = np.concatenate([pts[:-1], pts[1:]], axis=1)
+        lc = LineCollection(seg, cmap=cmap, norm=plt.Normalize(0, 1), lw=1.8)
+        lc.set_array(0.5 * (w[:-1] + w[1:]))
+        ax.add_collection(lc)
+    ax.plot(xi, xi, ls=(0, (3, 2)), lw=0.7, color=F_BLUE, alpha=0.6)
+    ax.plot(xi, -xi, ls=(0, (3, 2)), lw=0.7, color=F_RUST, alpha=0.6)
+    ax.annotate("", xy=(0, 1), xytext=(0, -1),
+                arrowprops=dict(arrowstyle="<->", lw=0.7, color=F_NAVY, shrinkA=0, shrinkB=0))
+    ax.text(-0.15, 0.25, r"$2\Delta$", ha="right", va="center", fontsize=7.5)
+    ax.text(3.2, 2.2, "elektron", color=F_BLUE, ha="center", fontsize=7)
+    ax.text(-3.2, 2.2, "dziura", color=F_RUST, ha="center", fontsize=7)
+    ax.annotate("pół na pół", xy=(0.08, 1.02), xytext=(1.25, 0.35), color=F_PURPLE,
+                fontsize=7, va="center",
+                arrowprops=dict(arrowstyle="-", lw=0.5, color=F_PURPLE, shrinkA=1, shrinkB=1))
+    ax.text(0.15, 4.2, r"$E/\Delta$", va="top", fontsize=7.5)
+    ax.set_xlim(-4, 4)
+    ax.set_ylim(-4.2, 4.2)
+    ax.set_xlabel(r"$\xi_k/\Delta$  (energia liczona od $E_F$)")
+    for s in ("left", "bottom"):
+        ax.spines[s].set_position("zero")
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_xticks([-4, -2, 2, 4])
+    ax.set_yticks([])
+    ax.xaxis.set_label_coords(0.5, -0.06)
+
+    bx.plot(xi, u2, color=F_BLUE, lw=1.6)
+    bx.plot(xi, 1 - u2, color=F_RUST, lw=1.6)
+    bx.axhline(0.5, color=F_LINE, lw=0.5)
+    bx.axvline(0, color=F_LINE, lw=0.5)
+    bx.text(2.3, 0.72, r"$|u_k|^2$  elektron", color=F_BLUE, ha="center", fontsize=7)
+    bx.text(-2.3, 0.72, r"$|v_k|^2$  dziura", color=F_RUST, ha="center", fontsize=7)
+    bx.set_xlim(-4, 4)
+    bx.set_ylim(0, 1.02)
+    bx.set_yticks([0, 0.5, 1])
+    bx.set_xlabel(r"$\xi_k/\Delta$")
+    bx.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout(w_pad=1.5)
+    fig.savefig(out / "bogolubow.pdf")
+    plt.close(fig)
+
+
+def _final_przerwa(out):
+    """Charakterystyka I(V) złącza tunelowego: metal–izolator–metal vs metal–izolator–nadprzewodnik (T = 0)."""
+    v = np.linspace(-3, 3, 1201)
+    i_nis = np.sign(v) * np.sqrt(np.clip(v ** 2 - 1, 0, None))
+    fig, ax = plt.subplots(figsize=(6.0 * CM, 4.6 * CM))
+    ax.axvspan(-1, 1, color=F_RUST, alpha=0.09, lw=0)
+    ax.plot(v, v, color=F_GREY, lw=1.0, ls=(0, (3, 2)))
+    ax.plot(v, i_nis, color=F_BLUE, lw=1.7)
+    for s in ("left", "bottom"):
+        ax.spines[s].set_position("zero")
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_xticks([-1, 1])
+    ax.set_xticklabels(["", ""])
+    ax.text(1, -0.25, r"$\Delta/e$", ha="center", va="top", fontsize=7, color=F_GREY)
+    ax.text(-1, 0.25, r"$-\Delta/e$", ha="center", va="bottom", fontsize=7, color=F_GREY)
+    ax.set_yticks([])
+    ax.set_xlim(-3, 3)
+    ax.set_ylim(-3, 3)
+    ax.text(3.0, -0.3, r"$V$", ha="right", va="top", fontsize=7.5)
+    ax.text(0.12, 2.95, r"$I$", ha="left", va="top", fontsize=7.5)
+    ax.text(2.1, 2.75, "metal", color=F_GREY, fontsize=7, ha="right")
+    ax.text(1.55, 0.55, "nadprzewodnik", color=F_BLUE, fontsize=7)
+    ax.text(0, -2.6, r"$I=0$", color=F_RUST, ha="center", fontsize=7)
+    fig.savefig(out / "przerwa_IV.pdf")
+    plt.close(fig)
+
+
+def _final_opor(out):
+    """Schemat R(T) rtęci (Onnes 1911): skok do zera przy T_c ≈ 4.2 K."""
+    T = np.linspace(4.0, 4.45, 901)
+    Tc = 4.2
+    R = np.where(T > Tc, 0.110 + 0.08 * (T - Tc), 0.0)
+    fig, ax = plt.subplots(figsize=(6.0 * CM, 4.6 * CM))
+    ax.plot(T, R, color=F_BLUE, lw=1.7)
+    ax.axvline(Tc, color=F_LINE, lw=0.6, ls=(0, (3, 2)))
+    ax.text(Tc + 0.01, 0.06, r"$T_c$", fontsize=7.5)
+    ax.text(4.03, 0.02, r"$R = 0$", color=F_RUST, fontsize=7.5)
+    ax.text(4.03, 0.135, "rtęć (Hg)", color=F_GREY, fontsize=7)
+    ax.set_xlim(T[0], T[-1])
+    ax.set_ylim(-0.005, 0.15)
+    ax.set_xlabel(r"$T$ (K)")
+    ax.set_ylabel(r"$R$ ($\Omega$)")
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.savefig(out / "opor_T.pdf")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     wykres_kitaev()
     wykres_drut_pasma()
     wykres_drut_bdg()
     wykres_drut_EB()
     wykres_przerwa()
+    wykresy_final()
     print("Zapisano do", OUT)
