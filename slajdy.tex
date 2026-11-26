@@ -54,8 +54,8 @@
 \usetikzlibrary{arrows.meta, positioning, calc, decorations.pathmorphing, babel}
 
 % --- prelegenci -----------------------------------------------------------------
-\newcommand{\prelegentA}{Maciej}   % TODO: imię i nazwisko
-\newcommand{\prelegentB}{}         % TODO: imię i nazwisko kolegi (część 5); puste = pomijamy
+\newcommand{\prelegentA}{Maciej Flaga}   % TODO: imię i nazwisko
+\newcommand{\prelegentB}{Tomasz Połomski}         % TODO: imię i nazwisko kolegi (część 5); puste = pomijamy
 \newcommand{\dataWystapienia}{\today}  % TODO: data wystąpienia
 \newcommand{\plikKolegi}{src/Majorany w nanodrucie warunki i eksperyment.pdf}
 
@@ -278,11 +278,6 @@
     }
     \foreach \i [evaluate=\i as \j using int(\i+1)] in {1,...,4}
       \draw[-{Stealth}, mGray, thick] (n\i) -- (n\j);
-    \draw[mGray, line width=0.4pt] ([yshift=-3mm]n1.south west) -- ([yshift=-3mm]n4.south east);
-    \node[below=4mm, font=\footnotesize, text=mGray] at ($(n2.south)!0.5!(n3.south)$) {\prelegentA};
-    \draw[mGray, line width=0.4pt] ([yshift=-3mm]n5.south west) -- ([yshift=-3mm]n5.south east);
-    \ifdefempty{\prelegentB}{}{%
-      \node[below=4mm, font=\footnotesize, text=mGray] at (n5.south) {\prelegentB};}
   \end{tikzpicture}
 \end{frame}
 
@@ -770,10 +765,15 @@
     \end{column}
     \begin{column}{0.54\textwidth}
       \centering
-      \duza{$c = \tfrac12\,(\gamma_1 + i\gamma_2)$}\\
-      \podpis{jak \ $z = x + iy$}\\[6mm]
-      \[ \gamma_1 = c + c^\dagger, \qquad \gamma_2 = i\,(c^\dagger - c) \]
-      „część rzeczywista” i~„urojona” fermionu
+      \duza{$c = \tfrac12\,(\gamma_1 + i\gamma_2)$}\\[2.5mm]
+      $c^\dagger = \tfrac12\,(\gamma_1 - i\gamma_2)$\\[0.5mm]
+      \podpis{bo $\gamma_1^\dagger = \gamma_1$, \ $\gamma_2^\dagger = \gamma_2$ \quad
+        (jak $z = x + iy$, \ $z^* = x - iy$)}\\[4mm]
+      \podpis{dodać / odjąć stronami:}\\[1.5mm]
+      $\gamma_1 = c + c^\dagger, \qquad \gamma_2 = i\,(c^\dagger - c)$\\[1.5mm]
+      „część rzeczywista” i~„urojona” fermionu\\[5mm]
+      \podpis{sprawdzenie: \
+        $\tfrac12(\gamma_1 + i\gamma_2) = \tfrac12\bigl(c + c^\dagger + i^2(c^\dagger - c)\bigr) = c$ \ \tak}
     \end{column}
   \end{columns}
 \end{frame}
@@ -853,41 +853,6 @@
   \karta[mBlue]{2.65cm}{\footnotesize\textbf{3.} zostaje „ślad” ładunku dodatniego}\hfill
   \karta[mRed]{2.65cm}{\footnotesize\textbf{4.} ślad przyciąga drugi elektron → \alert{para}}
   \uwaga{Skale: $\hbar\omega_D \sim 10$–$\qty{40}{meV}$ (drgania sieci) \ $\ll$ \ $E_F \sim \qty{10}{eV}$ (elektrony).}
-\end{frame}
-
-% plan: przeciwne pędy i spiny — wzór
-\begin{frame}{Para Coopera: przeciwne pędy i~spiny}
-  \begin{columns}[c]
-    \begin{column}{0.53\textwidth}
-      \centering
-      \[ \ket{\text{para}} = \sum_{\mathbf k} g_{\mathbf k}\;
-         c^\dagger_{\mathbf k\uparrow}\,c^\dagger_{-\mathbf k\downarrow}\,\ket{F} \]
-      \podpis{$\ket{F}$ — zapełnione morze Fermiego}\\[5mm]
-      \karta[mBlue]{5.6cm}{pęd: \ $\hbar\mathbf k + \hbar(-\mathbf k) = 0$}\\[2.5mm]
-      \karta[mBlue]{5.6cm}{spin: \ $\uparrow\downarrow$ — singlet, $S = 0$}
-    \end{column}
-    \begin{column}{0.43\textwidth}
-      \centering
-      \begin{tikzpicture}[scale=0.82]
-        \fill[mBlue!25, even odd rule] (0,0) circle (1.25) (0,0) circle (1.0);
-        \draw[mBlue] (0,0) circle (1.25) (0,0) circle (1.0);
-        \node[font=\scriptsize, align=center] at (0,-1.75) {$\mathbf K = 0$\\cała warstwa};
-        \begin{scope}[xshift=3.2cm]
-          \begin{scope}[even odd rule]
-            \clip (-0.25,0) circle (1.25) (-0.25,0) circle (1.0);
-            \fill[mPurple!40, even odd rule] (0.25,0) circle (1.25) (0.25,0) circle (1.0);
-          \end{scope}
-          \draw[mBlue] (-0.25,0) circle (1.25) (-0.25,0) circle (1.0);
-          \draw[mRed] (0.25,0) circle (1.25) (0.25,0) circle (1.0);
-          \node[font=\scriptsize, align=center] at (0,-1.75) {$\mathbf K \neq 0$\\tylko część};
-        \end{scope}
-      \end{tikzpicture}\\[1mm]
-      \podpis{przyciąganie działa tylko w~cienkiej warstwie przy $E_F$;\\
-        para o~pędzie $\mathbf K = 0$ ma \alert{najwięcej} stanów do dyspozycji}
-    \end{column}
-  \end{columns}
-  \uwaga{Energia wiązania $\approx 2\hbar\omega_D\,e^{-2/N(0)V}$ — wystarcza dowolnie słabe przyciąganie.}
-  \zrodlo{L.\,N.~Cooper, Phys. Rev. 104, 1189 (1956)}
 \end{frame}
 
 % plan: przeciwny pęd ≠ ruch w przeciwne strony; krążą wokół siebie; pary ogromne
@@ -1110,16 +1075,20 @@
 % plan: przejście do fermionów Majorany — E = 0; czego brakuje (spin, przerwa); styk
 \begin{frame}{$E = 0$: Majorana — czego jeszcze brakuje?}
   \centering
-  $\gamma^\dagger(E) = \gamma(-E)$ \quad ⇒ \quad dla $E = 0$: \quad
-  \duza{$\gamma_0^\dagger = \gamma_0$}\\
-  \podpis{stan nadprzewodnika przy zerowej energii \alert{jest} fermionem Majorany}\\[6mm]
+  $\gamma^\dagger(E) = \gamma(-E)$ \quad ⇒ \quad Majorana ($\gamma = \gamma^\dagger$) tylko przy
+  \ \duza{$E = 0$}\\
+  \podpis{warunek \alert{konieczny}, ale nie wystarczający — nie każdy stan przy $E = 0$ jest Majoraną}\\[2.5mm]
+  potrzeba: \ $\gamma = u\,c^\dagger_\sigma + u^*\,c_\sigma$
+    \quad \podpis{elektron i~dziura o~\alert{tym samym} spinie, po równo}\\[3.5mm]
   \raggedright
-  \karta[mGreen]{12.6cm}{\tak\ \ superpozycja elektronu i~dziury — daje ją \alert{nadprzewodnik}}\\[2mm]
-  \karta[mRed]{12.6cm}{\nie\ \ $E = 0$ — w~nadprzewodniku $|E| \ge \Delta$: w~przerwie nie ma stanów}\\[2mm]
-  \karta[mRed]{12.6cm}{\nie\ \ spin: $\gamma^\dagger = u\,c^\dagger_\uparrow + v\,c_\downarrow \neq \gamma$ —
-    elektron $\uparrow$ i~dziura $\downarrow$ to różne stany}
+  \karta[mGreen]{12.6cm}{\tak\ \ superpozycja elektronu i~dziury — daje ją \alert{nadprzewodnik}}\\[1.5mm]
+  \karta[mRed]{12.6cm}{\nie\ \ $E = 0$ — w~nadprzewodniku $|E| \ge \Delta$: w~przerwie nie ma stanów}\\[1.5mm]
+  \karta[mRed]{12.6cm}{\nie\ \ spin: elektron $\uparrow$ idzie z~dziurą $\downarrow$ \ ⇒ \
+    $\gamma^\dagger = u\,c^\dagger_\uparrow + v\,c_\downarrow \neq \gamma$, \ nawet przy $E = 0$}
   \uwaga{Pomysł: szukać na \alert{styku} nadprzewodnika z~metalem / półprzewodnikiem
-    (stany w~przerwie, odbicie Andriejewa) i~pozbyć się spinu → model Kitajewa.}
+    (stany w~przerwie, odbicie Andriejewa) i~pozbyć się spinu: jeden rodzaj elektronów,
+    parowanie o~tym samym spinie → model Kitajewa.}
+  \zrodlo{\LF, s.~2 i~wz.~(47)}
 \end{frame}
 
 % plan: najprostszy model — łańcuch Kitajewa; hamiltonian jak w artykule wz. (1)
@@ -1390,7 +1359,7 @@
 \section{Realizacja fizyczna}
 % =============================================================================
 \ifnum\wersjafinalna=1\relax
-  % --- część 5: slajdy kolegi (31 stron, 16:9, skalowane na całą stronę) ----
+  % --- część 5: slajdy kolegi (31 stron, bez 4, 9, 13, 28; 16:9, na całą stronę)
   % jasna strona kolegi: numer w prawym dolnym rogu jak na naszych slajdach
   \newcommand{\slajdKolegi}[1]{%
     {\setbeamertemplate{background canvas}{%
@@ -1415,16 +1384,13 @@
     \end{naStronie}}
   \slajdKolegi{2}
   \slajdKolegi{3}
-  \slajdKolegi{4}
   \slajdKolegi{5}
   \slajdKolegi{6}
   \slajdKolegi{7}
   \slajdKolegi{8}
-  \slajdKolegi{9}
   \slajdKolegi{10}
   \slajdKolegi{11}
   \slajdKolegi{12}
-  \slajdKolegi{13}
   \slajdKolegi{14}
   \slajdKolegi{15}
   \slajdKolegi{16}
@@ -1439,7 +1405,6 @@
   \slajdKolegi{25}
   \slajdKolegi{26}
   \slajdKolegi{27}
-  \slajdKolegi{28}
   \slajdKolegi{29}
   \slajdKolegi{30}
   \slajdKolegiCiemny{31}{}
@@ -1472,9 +1437,7 @@
           \url{https://youtu.be/6RhjrdnDUNI}
     \item[{[4]}] S.~Frolov, \emph{Majorana Fermions in Nanowires} (YouTube),
           \url{https://youtu.be/kh1u9Q5D47w}
-    \item[{[5]}] 3Blue1Brown, \emph{But what is quantum computing? (Grover's Algorithm)} (YouTube),
-          \url{https://youtu.be/RQWpF2Gb-gU}
-    \item[{[6]}] Claude (Anthropic), \url{https://claude.ai}
+    \item[{[5]}] Claude (Anthropic), \url{https://claude.ai}
   \end{itemize}
   \vspace{2mm}
   {\fontsize{6.6}{8.2}\selectfont\color{mGray}
